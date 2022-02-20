@@ -3,7 +3,6 @@ package fr.snooker4real.picombusinesscaseapi.services.impl;
 import fr.snooker4real.picombusinesscaseapi.entity.AnnonceEntity;
 import fr.snooker4real.picombusinesscaseapi.model.Annonce;
 import fr.snooker4real.picombusinesscaseapi.repository.AnnonceRepository;
-import fr.snooker4real.picombusinesscaseapi.repository.UserRepository;
 import fr.snooker4real.picombusinesscaseapi.services.AnnonceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -16,17 +15,14 @@ public class AnnonceServiceImpl implements AnnonceService {
 
     private final AnnonceRepository annonceRepository;
 
-    private final UserRepository userRepository;
 
-    public AnnonceServiceImpl(AnnonceRepository annonceRepository, UserRepository userRepository) {
+    public AnnonceServiceImpl(AnnonceRepository annonceRepository) {
         this.annonceRepository = annonceRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
     public Annonce createAnnonce(Annonce annonce, Long idUser) {
         AnnonceEntity annonceEntity = new AnnonceEntity();
-        userRepository.findById(idUser).ifPresent(annonce::setUser);
         BeanUtils.copyProperties(annonce, annonceEntity);
         annonceRepository.save(annonceEntity);
         return annonce;

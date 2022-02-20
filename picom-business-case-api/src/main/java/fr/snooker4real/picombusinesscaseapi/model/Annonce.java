@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @Data
 @NoArgsConstructor
@@ -23,9 +23,9 @@ public class Annonce {
 
     private String image_url;
 
-    protected Date date_debut;
+    protected OffsetDateTime date_debut;
 
-    protected Date date_fin;
+    protected OffsetDateTime date_fin;
 
     protected LocalDate dateCreation = LocalDate.now();
 
