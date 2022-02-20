@@ -20,9 +20,9 @@ public class AnnonceController {
         this.annonceService = annonceService;
     }
 
-    @PostMapping("/annonces")
-    public Annonce createAnnonce(@RequestBody Annonce annonce) {
-        return annonceService.createAnnonce(annonce);
+    @PostMapping("/annonces/{idUser}")
+    public Annonce createAnnonce(@RequestBody Annonce annonce, @PathVariable Long idUser) {
+        return annonceService.createAnnonce(annonce, idUser);
     }
 
     @GetMapping("/annonces")

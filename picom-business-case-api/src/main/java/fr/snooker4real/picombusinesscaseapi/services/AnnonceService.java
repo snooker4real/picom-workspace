@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AnnonceService {
 
-    Annonce createAnnonce(Annonce annonce);
+    Annonce createAnnonce(Annonce annonce, Long idUser);
 
     List<Annonce> getAllAnnonces();
 
@@ -15,4 +15,5 @@ public interface AnnonceService {
     Annonce getAnnonceById(Long id);
 
     Annonce updateAnnonce(Long id, Annonce annonce);
+
 }

@@ -1,15 +1,19 @@
 package fr.snooker4real.picombusinesscaseapi.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "users")
@@ -18,47 +22,59 @@ import static javax.persistence.GenerationType.AUTO;
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private long id;
 
     @NotBlank
+    @Size(max = 20)
     private String username;
 
     @NotBlank
-    private String password;
+    @Size(max = 50)
+    @Email
+    private String email;
 
     @NotBlank
-    private boolean loggedIn;
+    @Size(max = 120)
+    private String password;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<AnnonceEntity> annonces;
+    private Set<AnnonceEntity> annonces;
 
-    public UserEntity(String username, String password) {
+    public UserEntity(String username, String email, String password) {
         this.username = username;
+        this.email = email;
         this.password = password;
-        this.loggedIn = false;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserEntity userEntity = (UserEntity) o;
-        return username.equals(userEntity.username) && password.equals(userEntity.password);
+        UserEntity that = (UserEntity) o;
+        return id == that.id && username.equals(that.username) && email.equals(that.email) && password.equals(that.password) && roles.equals(that.roles) && Objects.equals(annonces, that.annonces);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, loggedIn, annonces);
+        return Objects.hash(id, username, email, password, roles, annonces);
     }
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserEntity{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", loggedIn=" + loggedIn +
+                ", roles=" + roles +
                 ", annonces=" + annonces +
                 '}';
     }

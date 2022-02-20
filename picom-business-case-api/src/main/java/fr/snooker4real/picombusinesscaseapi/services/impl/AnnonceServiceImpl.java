@@ -16,21 +16,22 @@ public class AnnonceServiceImpl implements AnnonceService {
 
     private final AnnonceRepository annonceRepository;
 
-    public AnnonceServiceImpl(AnnonceRepository annonceRepository) {
+    private final UserRepository userRepository;
+
+    public AnnonceServiceImpl(AnnonceRepository annonceRepository, UserRepository userRepository) {
         this.annonceRepository = annonceRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Annonce createAnnonce(Annonce annonce) {
+    public Annonce createAnnonce(Annonce annonce, Long idUser) {
         AnnonceEntity annonceEntity = new AnnonceEntity();
+        userRepository.findById(idUser).ifPresent(annonce::setUser);
         BeanUtils.copyProperties(annonce, annonceEntity);
-        annonceEntity.setUser(annonceEntity.getUser());
-        annonce.setUser(annonce.getUser());
         annonceRepository.save(annonceEntity);
-//        annonceRepository.s(annonceEntity, userId);
         return annonce;
     }
-    
+
 
     @Override
     public List<Annonce> getAllAnnonces() {
@@ -76,4 +77,6 @@ public class AnnonceServiceImpl implements AnnonceService {
         annonceRepository.save(annonceEntity);
         return annonce;
     }
+
+
 }
